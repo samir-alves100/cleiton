@@ -3,7 +3,7 @@ run-name: EFS
 on:
   push:
     branches:
-      -"main"
+      - "main"
     paths:
       - images/**
       - .github/workflows/main.yml
