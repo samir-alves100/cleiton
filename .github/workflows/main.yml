@@ -1,6 +1,6 @@
 name: automacao_efs
 run-name: EFS
-on:
+on: 
   push:
     branches:
       - "main"
@@ -13,26 +13,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: install ssh
+      
+      - name: Instalação do SSH
         run: sudo apt-get install -y openssh-client
 
-      - name: Verificar chave pem
+      - name: Verificação da chave PEM
         run: echo "$KEY_PATH"
         env:
           KEY_PATH: ${{ secrets.CHAVE_PEM }}
-      - name: Adicionar host EC2 ao kown_hosts
+
+      - name: Adicionar host EC2 ao known_hosts
         run: |
           ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
           ssh-keyscan -H 18.234.195.224 >> ~/.ssh/known_hosts
-      - name: Envio das imagens  SCP
+
+      - name: Envio das imagens SCP
         if: always()
         run: |
-          echo "$KEY_PATH" ./chave.pem
+          echo "$KEY_PATH" > ./chave.pem
           chmod 600 ./chave.pem
           scp -i ./chave.pem images/*.* ec2-user@18.234.195.224:/home/ec2-user/efs
         env:
           KEY_PATH: ${{ secrets.CHAVE_PEM }}
-          
-          
-    
